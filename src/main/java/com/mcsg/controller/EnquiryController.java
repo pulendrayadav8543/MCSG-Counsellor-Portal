@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.mcsg.constants.AppConstants;
 import com.mcsg.dto.EnqFilterRequestDto;
 import com.mcsg.dto.EnquiryDto;
 import com.mcsg.entity.Enquiry;
@@ -30,8 +31,8 @@ public class EnquiryController {
 	
 	@GetMapping("/enquiry")
 	public String returnEnqForm(Model model) {
-		model.addAttribute("enquiryDto", new EnquiryDto());
-		model.addAttribute("courses", courseService.getCourses());
+		model.addAttribute(AppConstants.ENQ_DTO, new EnquiryDto());
+		model.addAttribute(AppConstants.COURSES, courseService.getCourses());
 		return "add-enq";
 	}
 	
@@ -40,9 +41,7 @@ public class EnquiryController {
 		HttpSession session = request.getSession(false);
 		Integer counsellorId = (Integer) session.getAttribute("cid");
 		
-		// 1. Check if enqId is present in DTO
 		if (enqDto.getEnqId() != null) {
-			// UPDATE existing enquiry
 			boolean isUpdated = enquiryService.updateEnquiry(enqDto);
 			
 			if (isUpdated) {
@@ -50,10 +49,10 @@ public class EnquiryController {
 			} else {
 				model.addAttribute("emsg", "Failed to Update Enquiry");
 			}
-			model.addAttribute("courses", courseService.getCourses());
+			model.addAttribute(AppConstants.COURSES, courseService.getCourses());
 			return "edit-enq";
 		} else {
-			// INSERT new enquiry
+		
 			boolean isSaved = enquiryService.addEnquiry(enqDto, counsellorId);
 			
 			if (isSaved) {
@@ -61,8 +60,8 @@ public class EnquiryController {
 			} else {
 				model.addAttribute("error", "Failed to add enquiry");
 			}
-			model.addAttribute("enquiryDto", new EnquiryDto());
-			model.addAttribute("courses", courseService.getCourses());
+			model.addAttribute(AppConstants.ENQ_DTO, new EnquiryDto());
+			model.addAttribute(AppConstants.COURSES, courseService.getCourses());
 			return "add-enq";
 		}
 	}
@@ -75,7 +74,7 @@ public class EnquiryController {
 		List<Enquiry> allEnquiries = enquiryService.getAllEnquiries(counsellorId);
 		model.addAttribute("enqs", allEnquiries);
 		model.addAttribute("filter", new EnqFilterRequestDto());
-		model.addAttribute("courses", courseService.getCourses());
+		model.addAttribute(AppConstants.COURSES, courseService.getCourses());
 		
 		return "view-enqs";
 	}
@@ -88,15 +87,15 @@ public class EnquiryController {
 		List<Enquiry> allEnquiries = enquiryService.getEnquiriesWithFilter(filter, counsellorId);
 		model.addAttribute("enqs", allEnquiries);
 		model.addAttribute("filter", new EnqFilterRequestDto());
-		model.addAttribute("courses", courseService.getCourses());
+		model.addAttribute(AppConstants.COURSES, courseService.getCourses());
 		return "view-enqs";
 	}
 	
 	@GetMapping("/edit-enq")
 	public String editEnquiry(@RequestParam Integer enqId, Model model) {
 		EnquiryDto enquiryDto = enquiryService.editEnquiry(enqId);
-		model.addAttribute("enquiryDto", enquiryDto);
-		model.addAttribute("courses", courseService.getCourses());
+		model.addAttribute(AppConstants.ENQ_DTO, enquiryDto);
+		model.addAttribute(AppConstants.COURSES, courseService.getCourses());
 		return "edit-enq";
 	}
 }

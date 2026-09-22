@@ -28,7 +28,7 @@ public class EnquiryServiceImpl implements EnquiryService{
 
 	@Override
 	public boolean addEnquiry(EnquiryDto enqDto, Integer counsellorId) {
-		// TODO Auto-generated method stub
+		
 		Enquiry enquiry=new Enquiry();
 		BeanUtils.copyProperties(enqDto, enquiry);
 		
@@ -56,7 +56,7 @@ public class EnquiryServiceImpl implements EnquiryService{
 	public List<Enquiry> getEnquiriesWithFilter(EnqFilterRequestDto reqDto, Integer counsellorId) {
 	    Enquiry enqEntity = new Enquiry();
 
-	    // Check for both null and empty string values from form dropdowns
+	    
 	    if (reqDto.getClassMode() != null && !reqDto.getClassMode().trim().isEmpty()) {
 	        enqEntity.setClassMode(reqDto.getClassMode());
 	    }
@@ -94,21 +94,7 @@ public class EnquiryServiceImpl implements EnquiryService{
 	    
 	    return dto;
 	}
-/*
-	@Override
-	public boolean updateEnquiry(EnquiryDto enqDto) {
-		Enquiry enquiry=enqRepo.findById(enqDto.getEnqId()).get();
-		enquiry.setStuName(enqDto.getStuName());
-		enquiry.setClassMode(enqDto.getClassMode());
-		enquiry.setStuPhno(enqDto.getStuPhno());
-		enquiry.setEnqStatus(enqDto.getEnqStatus());
-		
-		Course course=courseRepo.findById(enqDto.getCourseId()).get();
-		enquiry.setCourse(course);
-		enqRepo.save(enquiry);
-		return true;
-	}
-*/
+
 	@Override
 	public boolean updateEnquiry(EnquiryDto enqDto) {
 	    if (enqDto == null || enqDto.getEnqId() == null) {
@@ -119,13 +105,13 @@ public class EnquiryServiceImpl implements EnquiryService{
 	    if (enqOpt.isPresent()) {
 	        Enquiry enquiry = enqOpt.get();
 	        
-	        // Update fields
+	        
 	        enquiry.setStuName(enqDto.getStuName());
 	        enquiry.setClassMode(enqDto.getClassMode());
 	        enquiry.setStuPhno(enqDto.getStuPhno());
 	        enquiry.setEnqStatus(enqDto.getEnqStatus());
 	        
-	        // Update Course
+	        
 	        if (enqDto.getCourseId() != null) {
 	            courseRepo.findById(enqDto.getCourseId()).ifPresent(enquiry::setCourse);
 	        }
